@@ -11,7 +11,11 @@ class App extends Component {
         password: '',
         colour: '',
         animal: [],
-        tiger_type: ''
+        tiger_type: '',
+        
+        formErrors: { isValidEmail: false, isValidPassword: false, isValidColour: false, isValidAnimal: false, isValidTiger_type: false },
+
+        submittingForm: false
 
     };
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -24,6 +28,8 @@ class App extends Component {
     
     const name = e.target.name;
     const inputValue = e.target.value;
+    let tigerTypeValue;
+    let fieldValidationErrors = this.state.formErrors;
     
     if (e.target.type === "checkbox") {
       
@@ -40,16 +46,59 @@ class App extends Component {
         index = animal.indexOf(inputValue);
         animal.splice(index, 1);
       }
-      
+      if (animal.indexOf('tiger') === -1 ) {
+        tigerTypeValue = '';
+        fieldValidationErrors.isValidTiger_type = true;
+
+      } else {
+        tigerTypeValue = this.state.tiger_type;
+        fieldValidationErrors.isValidTiger_type = false;
+      }
       // update the state with the new array of animal
-      this.setState({ animal: animal });
+      this.setState({ tiger_type: tigerTypeValue, animal: animal, formErrors: fieldValidationErrors, isFormSubmitting: false }, 
+                () => { this.validateField(name, inputValue) });
     } 
     else 
     {  
 
-      this.setState({[name]: inputValue });
+      this.setState({[name]: inputValue, isFormSubmitting: false}, 
+                () => { this.validateField(name, inputValue) });
 
     }
+  }
+
+  validateField(fieldName, value) {
+
+    let fieldValidationErrors = this.state.formErrors;
+    
+    switch(fieldName) {
+      case 'email':
+        const emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        fieldValidationErrors.isValidEmail = emailValid ? true : false;
+        break;
+      case 'password':
+        const passwordValid = ( value.length >= 8);
+        fieldValidationErrors.isValidPassword = passwordValid ? true:  false;
+        break;
+      case 'colour':
+        const colour = (value !== "");
+        fieldValidationErrors.isValidColour = colour ? true:  false;
+        break;
+      case 'animal':
+        const animal = this.state.animal;
+        fieldValidationErrors.isValidAnimal = animal.length>=2 ? true:  false;
+        break;
+      case 'tiger_type':
+        const tiger_type = (value !== "");
+        fieldValidationErrors.isValidTiger_type = (tiger_type) ? true:  false;
+        break;
+      default:
+        break;
+    
+    }
+    
+    this.setState({formErrors: fieldValidationErrors});
+
   }
 
   handleFormSubmit(e) {
@@ -71,6 +120,7 @@ class App extends Component {
 
   render() {
     console.log(this.state);
+    const isTigerTypeEnabled = ( this.state.animal.indexOf('tiger') > -1 && this.state.animal.length >=2 ) ? true : false;
     return (
       <form onSubmit={this.handleFormSubmit}>
         <h1>Fill out this awesome form</h1>
@@ -135,7 +185,7 @@ class App extends Component {
                 <label className='label' htmlFor='tiger_type'>
                     Type of tiger
                 </label>
-                <input type='text' name='tiger_type' id='tiger_type' value={this.state.tiger_type} onChange={this.handleUserInput} />
+                <input type='text' name='tiger_type' id='tiger_type' value={this.state.tiger_type} onChange={this.handleUserInput} disabled={!isTigerTypeEnabled} />
             </p>
         </fieldset>
         <fieldset>
