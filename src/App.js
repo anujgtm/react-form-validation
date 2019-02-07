@@ -139,6 +139,7 @@ class App extends Component {
 
   render() {
     const isFormSubmitting = this.state.submittingForm;
+    const animal = this.state.animal;
     const { isValidEmail, isValidPassword, isValidColour, isValidAnimal, isValidTiger_type } = this.state.formErrors;
     const isTigerTypeEnabled = ( this.state.animal.indexOf('tiger') > -1 && this.state.animal.length >=2 ) ? true : false;
     
@@ -181,22 +182,22 @@ class App extends Component {
                     Animal
                 </span>
 
-                <input type='checkbox' name='animal' value='bear' id='bear' onChange={this.handleUserInput} />
+                <input type='checkbox' name='animal' value='bear' id='bear' onChange={this.handleUserInput} checked={(animal.indexOf('bear') > -1)} />
                 <label htmlFor='bear'>
                      Bear
                 </label>
 
-                <input type='checkbox' name='animal' value='tiger' id='tiger' onChange={this.handleUserInput} />
+                <input type='checkbox' name='animal' value='tiger' id='tiger' onChange={this.handleUserInput} checked={(animal.indexOf('tiger') > -1)} />
                 <label htmlFor='tiger'>
                     Tiger
                 </label>
 
-                <input type='checkbox' name='animal' value='snake' id='snake' onChange={this.handleUserInput} />
+                <input type='checkbox' name='animal' value='snake' id='snake' onChange={this.handleUserInput} checked={(animal.indexOf('snake') > -1)} />
                 <label htmlFor='snake'>
                      Snake
                 </label>
 
-                <input type='checkbox' name='animal' value='donkey' id='donkey' onChange={this.handleUserInput} />
+                <input type='checkbox' name='animal' value='donkey' id='donkey' onChange={this.handleUserInput} checked={(animal.indexOf('donkey') > -1)} />
                 <label htmlFor='donkey'>
                      Donkey
                 </label>
