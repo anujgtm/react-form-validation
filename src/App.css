@@ -91,6 +91,12 @@ input[type='submit']:active {
     border-color: #333;
 }
 
+input[disabled],
+input[disabled]:hover {
+  background: #e9e9e9;
+}
+
+
 label + input[type=checkbox] {
     margin-left: 1em;
 }
@@ -126,10 +132,12 @@ fieldset + fieldset {
     </p>
 */
 .error > input,
+.error > select,
 .error > label {
     color: red;
 }
 
-.error > input {
+.error > input,
+.error > select {
     border-color: red;
 }
