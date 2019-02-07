@@ -67,6 +67,7 @@ class App extends Component {
     }
   }
 
+
   validateField(fieldName, value) {
 
     let fieldValidationErrors = this.state.formErrors;
@@ -101,8 +102,24 @@ class App extends Component {
 
   }
 
+  isFormValid() {
+      const { isValidEmail, isValidPassword, isValidColour, isValidAnimal, isValidTiger_type } = this.state.formErrors;
+      const formValid = ( isValidEmail && isValidPassword && isValidColour && isValidAnimal && isValidTiger_type) ? true: false;
+      return formValid;
+  }
+
   handleFormSubmit(e) {
-     e.preventDefault();
+
+    this.setState({submittingForm: true});
+    // Form submission
+    e.preventDefault();
+
+    if (this.isFormValid()) {
+      console.log("Submitting form values!");
+      console.log(this.state);
+      this.handleClearForm();
+    }
+    
   }
 
   handleClearForm() {
@@ -113,36 +130,40 @@ class App extends Component {
         password: '',
         colour: '',
         animal: [],
-        tiger_type: ''
+        tiger_type: '',
+        formErrors: { isValidEmail: false, isValidPassword: false, isValidColour: false, isValidAnimal: false, isValidTiger_type: false },
+        submittingForm: false
     });
 
   }
 
   render() {
-    console.log(this.state);
+    const isFormSubmitting = this.state.submittingForm;
+    const { isValidEmail, isValidPassword, isValidColour, isValidAnimal, isValidTiger_type } = this.state.formErrors;
     const isTigerTypeEnabled = ( this.state.animal.indexOf('tiger') > -1 && this.state.animal.length >=2 ) ? true : false;
+    
     return (
       <form onSubmit={this.handleFormSubmit}>
         <h1>Fill out this awesome form</h1>
         <fieldset>
             <h3>Your details</h3>
-            <p>
+            <p className={(!isValidEmail && isFormSubmitting ? 'error': '')}>
                 <label className='label' htmlFor='email'>
                     Email
                 </label>
                 <input type='text' id='email' name='email' value={this.state.email} onChange={this.handleUserInput} />
             </p>
-            <p>
+            <p className={(!isValidPassword && isFormSubmitting ? 'error': '')}>
                 <label className='label' htmlFor='password'>
                     Password
                 </label>
-                <input className='error' type='password' id='password' name='password' value={this.state.password} onChange={this.handleUserInput} />
+                <input type='password' id='password' name='password' value={this.state.password} onChange={this.handleUserInput} />
             </p>
         </fieldset>
 
         <fieldset>
             <h3>Your animal</h3>
-            <p>
+            <p className={(!isValidColour && isFormSubmitting ? 'error': '')}>
                 <label className='label' htmlFor='colour'>
                     Colour
                 </label>
@@ -155,7 +176,7 @@ class App extends Component {
                     <option value='brown'>Brown</option>
                 </select>
             </p>
-            <p>
+            <p className={(!isValidAnimal && isFormSubmitting ? 'error': '')}>
                 <span className="label">
                     Animal
                 </span>
@@ -181,7 +202,7 @@ class App extends Component {
                 </label>
 
             </p>
-            <p>
+            <p className={(!isValidTiger_type && isFormSubmitting ? 'error': '')}>
                 <label className='label' htmlFor='tiger_type'>
                     Type of tiger
                 </label>
